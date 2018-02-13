@@ -7,39 +7,40 @@ use App\Models\Teste\Teste;
 
 class SistemaController{
 	
-	public function inserir($dados)
+	public function index()
 	{
-		return (new TesteDAO)->create(new Teste($dados));
+		$testes = (new TesteDAO)->read();
+		
+		return view('home',compact('testes'));
 	}
 	
-	public function selecionar()
+	public function create()
 	{
-		return (new TesteDAO)->read();
+		return view('form');
 	}
 	
-	public function atualizar($dados)
+	public function store()
 	{
-		return (new TesteDAO)->update(new Teste($dados));
+		$dados = $_POST;
+		
+		(new TesteDAO)->create(new Teste($dados));
+		
+		return 'inserido';
+	}
+
+	public function atualizar()
+	{
+		$dados = $_POST;
+		
+		(new TesteDAO)->update(new Teste($dados));
+		
+		return 'editado';
 	}
 	
 	public function excluir($id)
 	{
-		return (new TesteDAO)->delete($id);
+		(new TesteDAO)->delete($id);
+		
+		return 'deletado';
 	}
-
 }
-
-$acao = @$_GET['acao'];
-
-$SC = new SistemaController();
-
-if($acao == 'create')
-	$SC->inserir($_GET);
-
-if($acao == 'update')
-	$SC->atualizar($_GET);
-
-if($acao == 'delete')
-	$SC->excluir($_GET['id']);
-	
-$testes = $SC->selecionar();
